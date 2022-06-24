@@ -8,29 +8,32 @@ class PostNotFoundException(massage: String) : Exception() {
 }
 
 //класс коммент
-class Comment(
+data class Comment(
     val commentId: Int,
     val postId: Int,
     val authorId: Int,
     var date: String,
     var text: String
-) {
-    fun addComment(list: MutableList<Post>, comment: Comment, commentList: MutableList<Comment>) {
+)
+
+// это коллекция постов
+object WallService {
+    internal var list: MutableList<Post> = emptyArray<Post>().toMutableList()
+
+    //создаем список комментов
+    val commentsList = mutableListOf<Comment>()
+
+    fun addComment(comment: Comment) {
         for (thispost in list) {
             if (comment.postId == thispost.id) {
-                commentList.add(comment)
-                //println("Добавлено")
+                commentsList.add(comment)
+                println("Добавлено")
                 break
             } else {
                 throw PostNotFoundException("0")
             }
         }
     }
-}
-
-// это коллекция постов
-object WallService {
-    internal var list: MutableList<Post> = emptyArray<Post>().toMutableList()
 
     fun add(post: Post): MutableList<Post> {
         var newPost: Post = post
@@ -105,31 +108,27 @@ fun main() {
     println("_______________________")
     printArr(WallService.list)
 
-
-
-
-
     //печать комментов
-//    fun printComments(commentList: MutableList<Comment>) {
-//        for (comment in commentList) {
-//            println(comment.text)
-//        }
-//    }
+    fun printComments(commentList: MutableList<Comment>) {
+        println("_______________________")
+        println("Добавленные комменты...")
+        for (comment in commentList) {
+            println(comment.text)
+        }
+    }
 
-    //создаем список комментов
-    val commentsList = mutableListOf<Comment>()
     //создаем объекты Comment
     val comment1 = Comment(1, 1, 1, "12.01.2022", "классный пост")
     val comment2 = Comment(2, 20, 1, "13.01.2022", "ужасный пост")
-    //пытаемся добавить оба. Добавится только 1
+
+    //пытаемся добавить оба. Добавится только 1, потому что поста с id = 20 не существует
     try {
-        comment1.addComment(WallService.list, comment1, commentsList)
-        comment2.addComment(WallService.list, comment2, commentsList)
+        WallService.addComment(comment1)
+        WallService.addComment( comment2)
     } catch (e: PostNotFoundException) {
-        //println(e.message)
+        println(e.message)
     }
-    //printComments(commentsList)
-    printAttaches()
+    printComments(WallService.commentsList)
 }
 
 //печать аатачей
