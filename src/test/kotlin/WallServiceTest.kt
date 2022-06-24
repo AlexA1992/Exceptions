@@ -33,7 +33,7 @@ class WallServiceTest {
             text = "курс по Kotlin читается отвратительно",
             attachment = Attachment(1,0,0,0,0)
         )
-        //act
+        //act111
         WallService.add(first)
         val thePostsSize1 = WallService.list.size
 
